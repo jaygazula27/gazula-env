@@ -1,0 +1,5 @@
+---
+font_awesome_version: 5.15.4
+fonts_dir: /usr/local/share/fonts
+font_awesome_dir: "{{ fonts_dir }}/fontawesome-{{ font_awesome_version }}"
+tmp_dir: /tmp

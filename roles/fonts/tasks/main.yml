@@ -1,0 +1,69 @@
+---
+- name: Get contents of Font Awesome directory
+  ansible.builtin.find:
+    path: "{{ font_awesome_dir }}"
+  register: fontawesome_dir_files
+
+- name: Print Font Awesome directory details
+  ansible.builtin.debug:
+    msg: "{{ fontawesome_dir_files }}"
+
+- name: Install Font Awesome
+  block:
+    - name: Find older Font Awesome versions
+      ansible.builtin.find:
+        path: "{{ fonts_dir }}"
+        patterns: "fontawesome-*"
+        file_type: directory
+      register: older_font_awesome_dirs
+
+    - name: Print older Font Awesome versions
+      ansible.builtin.debug:
+        msg: "{{ older_font_awesome_dirs }}"
+
+    - name: Delete older Font Awesome versions
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: absent
+      with_items: "{{ older_font_awesome_dirs.files }}"
+      become: yes
+
+    - name: Download and extract Font Awesome release archive
+      ansible.builtin.unarchive:
+        src: https://github.com/FortAwesome/Font-Awesome/releases/download/{{ font_awesome_version }}/fontawesome-free-{{ font_awesome_version }}-desktop.zip
+        dest: "{{ tmp_dir }}"
+        remote_src: yes
+        list_files: yes
+      register: font_awesome_extracted_result
+
+    - name: Create Font Awesome directory
+      ansible.builtin.file:
+        path: "{{ font_awesome_dir }}"
+        state: directory
+        mode: "0755"
+        owner: "root"
+        group: "root"
+      become: yes
+
+    - name: Get extracted directory
+      ansible.builtin.set_fact:
+        font_awesome_extracted_dir: "{{ font_awesome_extracted_result.files[0].split('/')[0] }}"
+
+    - name: Find extracted otf files
+      ansible.builtin.find:
+        path: "{{ tmp_dir }}/{{ font_awesome_extracted_dir }}/otfs"
+        patterns: "*.otf"
+      register: font_awesome_otf_files
+
+    - name: Copy otf files to font directory
+      ansible.builtin.copy:
+        src: "{{ item.path }}"
+        dest: "{{ font_awesome_dir }}"
+        remote_src: yes
+        mode: "0755"
+      with_items: "{{ font_awesome_otf_files.files }}"
+      become: yes
+
+    - name: Refresh font cache
+      ansible.builtin.command: fc-cache -f
+  when: fontawesome_dir_files.matched == 0

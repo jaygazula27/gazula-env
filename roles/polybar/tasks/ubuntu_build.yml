@@ -1,0 +1,54 @@
+---
+- name: Install polybar dependencies
+  ansible.builtin.package:
+    name:
+      - build-essential
+      - cmake
+      - cmake-data
+      - pkg-config
+      - python3-sphinx
+      - python3-packaging
+      - libuv1-dev
+      - libcairo2-dev
+      - libxcb-util0-dev
+      - libxcb-randr0-dev
+      - libxcb-composite0-dev
+      - python3-xcbgen
+      - xcb-proto
+      - libxcb-image0-dev
+      - libxcb-ewmh-dev
+      - libxcb-icccm4-dev
+      - libjsoncpp-dev
+    state: present
+  become: yes
+
+- name: Download and extract polybar release archive
+  ansible.builtin.unarchive:
+    src: https://github.com/polybar/polybar/releases/download/{{ polybar_version }}/polybar-{{ polybar_version }}.tar.gz
+    dest: "{{ polybar_src_dir }}"
+    remote_src: yes
+    mode: "0755"
+    owner: "root"
+    group: "root"
+    creates: "{{ polybar_src_dir }}/polybar-{{ polybar_version }}"
+  become: yes
+
+- name: Create build dir in polybar source dir
+  ansible.builtin.file:
+    path: "{{ polybar_src_dir }}/polybar-{{ polybar_version }}/build"
+    state: directory
+    mode: "0755"
+  become: yes
+
+- name: Execute cmake in polybar build dir
+  ansible.builtin.command:
+    chdir: "{{ polybar_src_dir }}/polybar-{{ polybar_version }}/build"
+    cmd: "cmake .."
+  become: yes
+
+- name: Build polybar
+  community.general.make:
+    chdir: "{{ polybar_src_dir }}/polybar-{{ polybar_version }}/build"
+    target: install
+    jobs: "{{ ansible_processor_nproc }}"
+  become: yes

@@ -1,0 +1,31 @@
+---
+- name: Check if polybar was installed via source
+  ansible.builtin.stat:
+    path: /usr/local/bin/polybar
+  register: polybar_executable
+
+- name: Print polybar executable details
+  ansible.builtin.debug:
+    msg: "{{ polybar_executable }}"
+
+- name: Install polybar
+  block:
+    - name: Install polybar via package manager
+      ansible.builtin.package:
+        name: polybar
+        state: present
+      ignore_errors: yes
+      become: yes
+      register: installed
+
+    - name: Log failure to install polybar via package manager
+      ansible.builtin.debug:
+        msg: Unable to install polybar via the package manager. Will try building from source.
+      when: installed.failed
+
+    - name: Build polybar from source
+      ansible.builtin.include_tasks: ubuntu_build.yml
+      when:
+        - installed.failed
+        - ansible_facts['os_family'] == 'Debian'
+  when: not polybar_executable.stat.exists

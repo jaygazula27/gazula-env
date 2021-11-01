@@ -1,0 +1,14 @@
+---
+- name: Add ppa repository needed for i3-gaps
+  ansible.builtin.apt_repository:
+    repo: ppa:regolith-linux/release
+    state: present
+  become: yes
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install i3-gaps
+  ansible.builtin.package:
+    name: i3-gaps
+    state: present
+  become: yes
+  
