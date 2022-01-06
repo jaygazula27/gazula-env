@@ -19,6 +19,7 @@
       - libxcb-ewmh-dev
       - libxcb-icccm4-dev
       - libjsoncpp-dev
+      - i3-wm
     state: present
   become: yes
 

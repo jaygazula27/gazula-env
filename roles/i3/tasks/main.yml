@@ -11,4 +11,15 @@
     name: i3-gaps
     state: present
   become: yes
+
+- name: Create i3 config directory
+  ansible.builtin.file:
+    path: "{{ i3_config_dir}}"
+    state: directory
+    mode: "0755"
   
+- name: Copy i3 config
+  ansible.builtin.template:
+    src: templates/config
+    dest: "{{ i3_config_dir}}/config"
+    mode: "0755"

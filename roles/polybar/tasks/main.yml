@@ -24,8 +24,38 @@
       when: installed.failed
 
     - name: Build polybar from source
-      ansible.builtin.include_tasks: ubuntu_build.yml
+      ansible.builtin.include_tasks: build.yml
       when:
         - installed.failed
-        - ansible_facts['os_family'] == 'Debian'
   when: not polybar_executable.stat.exists
+
+- name: Install net-tools since for IP info in bottom polybar
+  ansible.builtin.package:
+    name: net-tools
+    state: present
+  become: yes
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Create Polybar config directory
+  ansible.builtin.file:
+    path: "{{ polybar_config_dir}}"
+    state: directory
+    mode: "0755"
+
+- name: Copy Polybar config
+  ansible.builtin.template:
+    src: templates/config
+    dest: "{{ polybar_config_dir}}/config"
+    mode: "0755"
+
+- name: Copy launchpolybar script
+  ansible.builtin.template:
+    src: templates/launchpolybar.sh
+    dest: "{{ polybar_config_dir}}/launchpolybar.sh"
+    mode: "0755"
+
+- name: Copy localip script for Polybar
+  ansible.builtin.template:
+    src: templates/localip.sh
+    dest: "{{ polybar_config_dir}}/localip.sh"
+    mode: "0755"

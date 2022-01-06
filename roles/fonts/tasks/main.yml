@@ -8,6 +8,10 @@
   ansible.builtin.debug:
     msg: "{{ fontawesome_dir_files }}"
 
+- name: Initialize "font_installed" variable
+  ansible.builtin.set_fact:
+    font_installed: false
+
 - name: Install Font Awesome
   block:
     - name: Find older Font Awesome versions
@@ -64,6 +68,52 @@
       with_items: "{{ font_awesome_otf_files.files }}"
       become: yes
 
-    - name: Refresh font cache
-      ansible.builtin.command: fc-cache -f
+    - name: Set "font_installed" variable to true
+      ansible.builtin.set_fact:
+        font_installed: true
   when: fontawesome_dir_files.matched == 0
+
+- name: Install Noto Sans font
+  ansible.builtin.package:
+    name:
+      - fonts-noto
+  become: yes
+
+- name: Ensure Iosevka directory
+  ansible.builtin.file:
+    path: "{{ iosevka_dir }}"
+    state: directory
+    mode: "0755"
+    owner: "root"
+    group: "root"
+  become: yes
+
+- name: Get contents of Iosevka directory
+  ansible.builtin.find:
+    path: "{{ iosevka_dir }}"
+  register: iosevka_dir_files
+
+- name: Print Iosevka directory details
+  ansible.builtin.debug:
+    msg: "{{ iosevka_dir_files }}"
+
+- name: Install Iosevka fonts
+  block:
+    - name: Download and extract Noto Sans fonts
+      ansible.builtin.unarchive:
+        src: "https://github.com/be5invis/Iosevka/releases/download/v{{ iosevka_version }}/ttf-iosevka-{{ iosevka_version }}.zip"
+        dest: "{{ iosevka_dir }}"
+        remote_src: yes
+        mode: "0755"
+        owner: "root"
+        group: "root"
+      become: yes
+
+    - name: Set "font_installed" variable to true
+      ansible.builtin.set_fact:
+        font_installed: true
+  when: iosevka_dir_files.matched == 0
+
+- name: Refresh font cache if a font has been installed
+  ansible.builtin.command: fc-cache -f
+  when: font_installed

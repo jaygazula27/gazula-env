@@ -1,3 +1,4 @@
 ---
 polybar_version: 3.5.7
 polybar_src_dir: /usr/local/src/
+polybar_config_dir: ~/.config/polybar
