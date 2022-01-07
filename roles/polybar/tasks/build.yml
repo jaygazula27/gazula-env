@@ -20,6 +20,8 @@
       - libxcb-icccm4-dev
       - libjsoncpp-dev
       - i3-wm
+      - libnl-genl-3-dev
+      - libpulse-dev
     state: present
   become: yes
 

@@ -18,9 +18,9 @@ black = #000
 ; ------------------------------------------------------
 
 
-[bar/bottom]
-bottom = true
-height = 40
+[section/bar-common]
+bottom = false
+height = 50
 
 ; Value used for drawing rounded corners
 ; Note: This shouldn't be used together with border-size because the border 
@@ -31,38 +31,127 @@ radius = 6.0
 background = ${colors.background}
 foreground = ${colors.foreground}
 
+; Under-/overline pixel size
+line-size = 3
+
+; Number of spaces to add at the end of the bar
+padding-right = 5
+
+; Number of spaces to add before/after each module
+module-margin-left = 1
+module-margin-right = 1
+
+; Fonts are defined using <font-name>;<vertical-offset>
+; Font names are specified using a fontconfig pattern.
+font-0 = Iosevka:style=Regular:size=18
+font-1 = Noto Sans:style=Regular:size=18
+font-2 = Font Awesome 5 Free,Font Awesome 5 Free Regular:style=Regular:size=18
+font-3 = Font Awesome 5 Brands,Font Awesome 5 Brands Regular:style=Regular:size=18
+font-4 = Font Awesome 5 Free,Font Awesome 5 Free Solid:style=Solid:size=18
+
+; The separator will be inserted between the output of each module
+separator = /
+separator-foreground = ${colors.blue}
+
+
+; ------------------------------------------------------
+; ------------------------------------------------------
+
+
+[bar/top]
+inherit = section/bar-common
+bottom = false
+
+; Number of spaces to add at the beginning of the bar
+padding-left = 5
+
+; Modules added to one of the available blocks
+modules-left = title
+modules-center = date
+modules-right = wireless-network pulseaudio
+
+
+; ------------------------------------------------------
+; ------------------------------------------------------
+
+
+[bar/bottom]
+inherit = section/bar-common
+bottom = true
+
 ; Fallback click handlers that will be called if
 ; there's no matching module handler found.
 scroll-up = "#i3.prev"
 scroll-down = "#i3.next"
-
-; Under-/overline pixel size
-line-size = 3
-
-; Number of spaces to add at the beginning/end of the bar
-padding-left = 0
-padding-right = 5
-
-; Number of spaces to add before/after each module
-module-margin-left = 3
-module-margin-right = 3
-
-; Fonts are defined using <font-name>;<vertical-offset>
-; Font names are specified using a fontconfig pattern.
-font-0 = Noto Sans:style=Regular
-font-1 = Iosevka:style=Regular
-font-2 = Font Awesome 5 Free,Font Awesome 5 Free Regular:style=Regular:size=13
-font-3 = Font Awesome 5 Brands,Font Awesome 5 Brands Regular:style=Regular:size=13
-font-4 = Font Awesome 5 Free,Font Awesome 5 Free Solid:style=Solid:size=13
 
 ; Modules added to one of the available blocks
 modules-left = i3
 modules-center = 
 modules-right = cpu memory temperature localip
 
-; The separator will be inserted between the output of each module
-separator = /
-separator-foreground = ${colors.blue}
+
+; ------------------------------------------------------
+; ------------------------------------------------------
+
+
+[module/title]
+type = internal/xwindow
+
+
+; ------------------------------------------------------
+; ------------------------------------------------------
+
+
+[module/date]
+type = internal/date
+date = %b%e
+time = %H:%M:%S
+label = %date% %time%
+
+
+; ------------------------------------------------------
+; ------------------------------------------------------
+
+
+[module/wireless-network]
+type = internal/network
+interface = wlp6s0
+
+format-connected-prefix = " "
+format-connected-prefix-foreground = ${colors.pink}
+
+label-connected = %signal%
+label-connected-foreground = ${colors.pink}
+
+format-connected-suffix = "%"
+format-connected-suffix-foreground = ${colors.pink}
+
+format-disconnected-prefix = " "
+format-disconnected-prefix-foreground = ${colors.pink}
+
+label-disconnected = %signal%
+label-disconnected-foreground = ${colors.pink}
+
+format-disconnected-suffix = "%"
+format-disconnected-suffix-foreground = ${colors.pink}
+
+
+; ------------------------------------------------------
+; ------------------------------------------------------
+
+
+[module/pulseaudio]
+type = internal/pulseaudio
+use-ui-max = false
+
+format-volume-prefix = " "
+format-volume-prefix-foreground = ${colors.cyan}
+label-volume-foreground = ${colors.cyan}
+
+format-muted-prefix = " "
+format-muted-prefix-foreground = ${colors.cyan}
+label-muted = "-"
+label-muted-foreground = ${colors.cyan}
 
 
 ; ------------------------------------------------------
@@ -83,7 +172,7 @@ wrapping-scroll = false
 pin-workspaces = true
 
 ; mode = resize, etc
-label-mode-padding = 2
+label-mode-padding = 1
 label-mode-foreground = ${colors.black}
 label-mode-background = ${colors.purple}
 
@@ -92,11 +181,11 @@ label-focused = %index%
 label-focused-foreground = ${colors.foreground}
 label-focused-background = ${colors.background-alt}
 label-focused-underline= ${colors.yellow}
-label-focused-padding = 2
+label-focused-padding = 1
 
 ; unfocused = Inactive workspace on any monitor
 label-unfocused = %index%
-label-unfocused-padding = 2
+label-unfocused-padding = 1
 
 ; visible = Active workspace on unfocused monitor
 label-visible = %index%
@@ -109,7 +198,7 @@ label-visible-padding = ${self.label-focused-padding}
 label-urgent = %index%
 label-urgent-foreground = ${self.label-focused-foreground}
 label-urgent-background = ${colors.red}
-label-urgent-padding = 2
+label-urgent-padding = 1
 
 ; Separator in between workspaces
 label-separator = |
@@ -127,7 +216,6 @@ interval = 1
 
 format-prefix = " "
 format-prefix-foreground = ${colors.pink}
-format-prefix-margin = 1
 
 label = %percentage%
 label-foreground = ${colors.pink}
@@ -148,7 +236,6 @@ interval = 1
 
 format-prefix = " "
 format-prefix-foreground = ${colors.cyan}
-format-prefix-margin = 1
 
 label = %percentage_used%
 label-foreground = ${colors.cyan}
@@ -166,7 +253,6 @@ type = internal/temperature
 
 format-prefix = " "
 format-prefix-foreground = ${colors.orange}
-format-prefix-margin = 1
 
 label = %temperature-f%
 label-foreground = ${colors.orange}
