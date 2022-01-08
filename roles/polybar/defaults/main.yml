@@ -2,3 +2,5 @@
 polybar_version: 3.5.7
 polybar_src_dir: /usr/local/src/
 polybar_config_dir: ~/.config/polybar
+wired_network_interface: enp0s3
+wireless_network_interface: wlp6s0

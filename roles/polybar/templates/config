@@ -35,7 +35,7 @@ foreground = ${colors.foreground}
 line-size = 3
 
 ; Number of spaces to add at the end of the bar
-padding-right = 5
+padding-right = 2
 
 ; Number of spaces to add before/after each module
 module-margin-left = 1
@@ -63,12 +63,12 @@ inherit = section/bar-common
 bottom = false
 
 ; Number of spaces to add at the beginning of the bar
-padding-left = 5
+padding-left = 1
 
 ; Modules added to one of the available blocks
 modules-left = title
 modules-center = date
-modules-right = wireless-network pulseaudio
+modules-right = wired-network wireless-network pulseaudio battery
 
 
 ; ------------------------------------------------------
@@ -83,6 +83,8 @@ bottom = true
 ; there's no matching module handler found.
 scroll-up = "#i3.prev"
 scroll-down = "#i3.next"
+
+tray-position = center
 
 ; Modules added to one of the available blocks
 modules-left = i3
@@ -106,6 +108,7 @@ type = internal/xwindow
 type = internal/date
 date = %b%e
 time = %H:%M:%S
+format = %{A3:gnome-calendar:}<label>%{A}
 label = %date% %time%
 
 
@@ -113,27 +116,55 @@ label = %date% %time%
 ; ------------------------------------------------------
 
 
-[module/wireless-network]
-type = internal/network
-interface = wlp6s0
-
-format-connected-prefix = " "
+[section/base-network]
 format-connected-prefix-foreground = ${colors.pink}
 
-label-connected = %signal%
 label-connected-foreground = ${colors.pink}
 
-format-connected-suffix = "%"
-format-connected-suffix-foreground = ${colors.pink}
-
-format-disconnected-prefix = " "
 format-disconnected-prefix-foreground = ${colors.pink}
 
-label-disconnected = %signal%
 label-disconnected-foreground = ${colors.pink}
 
-format-disconnected-suffix = "%"
+
+; ------------------------------------------------------
+; ------------------------------------------------------
+
+
+[module/wired-network]
+type = internal/network
+inherit = section/base-network
+
+interface = "{{ wired_network_interface }}"
+
+format-connected-prefix = %{A3:nm-connection-editor:} %{A}
+
+label-connected = %{A3:nm-connection-editor:}%linkspeed%%{A}
+
+format-disconnected-prefix = %{A3:nm-connection-editor:} %{A}
+
+label-disconnected = %{A3:nm-connection-editor:}N/A%{A}
+
+; ------------------------------------------------------
+; ------------------------------------------------------
+
+
+[module/wireless-network]
+type = internal/network
+inherit = section/base-network
+
+interface = "{{ wireless_network_interface }}"
+
+format-connected-prefix = %{A3:nm-connection-editor:} %{A}
+format-connected-suffix = %{A3:nm-connection-editor:}%%{A}
+format-connected-suffix-foreground = ${colors.pink}
+
+label-connected = %{A3:nm-connection-editor:}%signal%%{A}
+
+format-disconnected-prefix = %{A3:nm-connection-editor:} %{A}
+format-disconnected-suffix = %{A3:nm-connection-editor:}%%{A}
 format-disconnected-suffix-foreground = ${colors.pink}
+
+label-disconnected = %{A3:nm-connection-editor:}%signal%%{A}
 
 
 ; ------------------------------------------------------
@@ -153,6 +184,35 @@ format-muted-prefix-foreground = ${colors.cyan}
 label-muted = "-"
 label-muted-foreground = ${colors.cyan}
 
+click-right = pavucontrol
+
+
+; ------------------------------------------------------
+; ------------------------------------------------------
+
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = AC
+
+format-charging-prefix = " "
+format-charging-prefix-foreground = ${colors.orange}
+label-charging-foreground = ${colors.orange}
+format-charging-suffix = "%"
+format-charging-suffix-foreground = ${colors.orange}
+
+format-full-prefix = " "
+format-full-prefix-foreground = ${colors.orange}
+label-full-foreground = ${colors.orange}
+format-full-suffix = "%"
+format-full-suffix-foreground = ${colors.orange}
+
+format-discharging-prefix = " "
+format-discharging-prefix-foreground = ${colors.orange}
+label-discharging-foreground = ${colors.orange}
+format-discharging-suffix = "%"
+format-discharging-suffix-foreground = ${colors.orange}
 
 ; ------------------------------------------------------
 ; ------------------------------------------------------

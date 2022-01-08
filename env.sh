@@ -24,5 +24,15 @@ if "${pip_executable}" freeze -r requirements.txt 2>&1 | grep -q "not installed"
     "${pip_executable}" install -r requirements.txt
 fi
 
+# Figure out the target of the playbook.
+# That is, which laptop/desktop environment will this playbook be run on?
+extra_vars_file=""
+if [ -z "${1}" ]; then
+    echo 'No target given. Must be either "vm", "home", or "work". Exiting...'
+    exit 1
+else
+    extra_vars_file="@""${1}"".yml"
+fi
+
 # Finally, time to run the playbook.
-"${ansible_playbook_executable}" --ask-become-pass -i inventory env.yml
+"${ansible_playbook_executable}" --ask-become-pass -i inventory -e "${extra_vars_file}" env.yml
