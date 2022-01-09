@@ -1,0 +1,46 @@
+---
+- name: Install Fish
+  ansible.builtin.package:
+    name: fish
+    state: present
+  become: yes
+
+- name: Create Fish config directory
+  ansible.builtin.file:
+    path: "{{ fish_config_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Copy Fish config
+  ansible.builtin.template:
+    src: templates/config.fish
+    dest: "{{ fish_config_dir }}"
+    mode: "0755"
+
+- name: Check if Fisher is installed
+  ansible.builtin.stat:
+    path: "{{ fisher_function_path }}"
+  register: fisher_function_stat
+
+- name: Print Fisher function path details
+  ansible.builtin.debug:
+    msg: "{{ fisher_function_stat }}"
+
+- name: Install Fisher
+  ansible.builtin.command:
+    cmd: "fish -c 'curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher'"
+  when: not fisher_function_stat.stat.exists
+
+- name: Check if Pure theme for Fish is installed
+  ansible.builtin.stat:
+    path: "{{ pure_theme_path }}"
+  register: pure_theme_stat
+
+- name: Print Pure theme conf details
+  ansible.builtin.debug:
+    msg: "{{ pure_theme_stat }}"
+
+- name: Install Pure theme
+  ansible.builtin.command:
+    cmd: "fish -c 'fisher install pure-fish/pure'"
+  when: not pure_theme_stat.stat.exists

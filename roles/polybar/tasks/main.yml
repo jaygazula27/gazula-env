@@ -38,24 +38,24 @@
 
 - name: Create Polybar config directory
   ansible.builtin.file:
-    path: "{{ polybar_config_dir}}"
+    path: "{{ polybar_config_dir }}"
     state: directory
     mode: "0755"
 
 - name: Copy Polybar config
   ansible.builtin.template:
     src: templates/config
-    dest: "{{ polybar_config_dir}}/config"
+    dest: "{{ polybar_config_dir }}/config"
     mode: "0755"
 
 - name: Copy launchpolybar script
   ansible.builtin.template:
     src: templates/launchpolybar.sh
-    dest: "{{ polybar_config_dir}}/launchpolybar.sh"
+    dest: "{{ polybar_config_dir }}/launchpolybar.sh"
     mode: "0755"
 
 - name: Copy localip script for Polybar
   ansible.builtin.template:
     src: templates/localip.sh
-    dest: "{{ polybar_config_dir}}/localip.sh"
+    dest: "{{ polybar_config_dir }}/localip.sh"
     mode: "0755"

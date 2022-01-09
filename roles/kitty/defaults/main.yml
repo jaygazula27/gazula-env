@@ -1,0 +1,5 @@
+---
+kitty_version: 0.24.1
+kitty_src_dir: /usr/local/src/kitty-{{ kitty_version }}
+kitty_src_dir_parent: /usr/local/src/
+kitty_config_dir: ~/.config/kitty/

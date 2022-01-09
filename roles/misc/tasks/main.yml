@@ -1,12 +1,11 @@
 ---
-- name: Install pavucontrol
+- name: Install misc packages
   ansible.builtin.package:
-    name: pavucontrol
-    state: present
-  become: yes
-
-- name: Install gnome-calendar
-  ansible.builtin.package:
-    name: gnome-calendar
+    name:
+      - pavucontrol
+      - gnome-calendar
+      - git
+      - curl
+      - tree
     state: present
   become: yes

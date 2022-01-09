@@ -1,0 +1,57 @@
+---
+- name: Check if Kitty is installed
+  ansible.builtin.stat:
+    path: "{{ kitty_src_dir }}"
+  register: kitty_src_dir_stat
+
+- name: Print Kitty src dir details
+  ansible.builtin.debug:
+    msg: "{{ kitty_src_dir_stat }}"
+
+- name: Install Kitty
+  block:
+    - name: Remove other Kitty versions
+      ansible.builtin.command:
+        cmd: rm -rf /kitty-*
+        chdir: "{{ kitty_src_dir_parent }}"
+      become: yes
+
+    - name: Create Kitty src directory
+      ansible.builtin.file:
+        path: "{{ kitty_src_dir }}"
+        state: directory
+        mode: "0755"
+      become: yes
+
+    - name: Download and extract Kitty release archive
+      ansible.builtin.unarchive:
+        src: https://github.com/kovidgoyal/kitty/releases/download/v{{ kitty_version }}/kitty-{{ kitty_version }}-x86_64.txz
+        dest: "{{ kitty_src_dir }}"
+        remote_src: yes
+        mode: "0755"
+        owner: "root"
+        group: "root"
+      become: yes
+  when: not kitty_src_dir_stat.stat.exists
+
+- name: Create Kitty symbolic link
+  ansible.builtin.file:
+    src: "{{ kitty_src_dir }}/bin/kitty"
+    dest: /usr/local/bin/kitty
+    owner: root
+    group: root
+    mode: "0755"
+    state: link
+  become: yes
+
+- name: Create Kitty config directory
+  ansible.builtin.file:
+    path: "{{ kitty_config_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Copy Kitty config
+  ansible.builtin.template:
+    src: templates/kitty.conf
+    dest: "{{ kitty_config_dir }}"
+    mode: "0755"
