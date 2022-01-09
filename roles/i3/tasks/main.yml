@@ -1,4 +1,10 @@
 ---
+- name: Remove i3 (so that it doesn't conflict with i3-gaps)
+  ansible.builtin.package:
+    name: i3
+    state: absent
+  become: yes
+
 - name: Add ppa repository needed for i3-gaps
   ansible.builtin.apt_repository:
     repo: ppa:regolith-linux/release
@@ -14,12 +20,12 @@
 
 - name: Create i3 config directory
   ansible.builtin.file:
-    path: "{{ i3_config_dir}}"
+    path: "{{ i3_config_dir }}"
     state: directory
     mode: "0755"
   
 - name: Copy i3 config
   ansible.builtin.template:
     src: templates/config
-    dest: "{{ i3_config_dir}}/config"
+    dest: "{{ i3_config_dir }}/config"
     mode: "0755"

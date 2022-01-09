@@ -1,0 +1,30 @@
+---
+- name: Install rofi
+  ansible.builtin.package:
+    name: rofi
+    state: present
+  become: yes
+
+- name: Create rofi config directory
+  ansible.builtin.file:
+    path: "{{ rofi_config_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Copy rofi launcher script
+  ansible.builtin.template:
+    src: templates/launchrofi.sh
+    dest: "{{ rofi_config_dir }}"
+    mode: "0755"
+
+- name: Copy rofi theme
+  ansible.builtin.template:
+    src: templates/theme.rasi
+    dest: "{{ rofi_config_dir }}"
+    mode: "0755"
+
+- name: Copy rofi theme colors
+  ansible.builtin.template:
+    src: templates/colors.rasi
+    dest: "{{ rofi_config_dir }}"
+    mode: "0755"

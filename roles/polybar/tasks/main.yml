@@ -29,7 +29,7 @@
         - installed.failed
   when: not polybar_executable.stat.exists
 
-- name: Install net-tools since for IP info in bottom polybar
+- name: Install net-tools for IP info in bottom polybar
   ansible.builtin.package:
     name: net-tools
     state: present
