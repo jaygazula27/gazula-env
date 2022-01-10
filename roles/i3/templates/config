@@ -174,3 +174,6 @@ exec_always --no-startup-id $HOME/.config/polybar/launchpolybar.sh
 
 # Display resolution
 exec_always --no-startup-id autorandr --change
+
+# Print screen
+bindsym --release Print exec flameshot gui

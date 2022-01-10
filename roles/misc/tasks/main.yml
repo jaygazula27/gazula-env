@@ -9,6 +9,7 @@
       - tree
       - feh
       - autorandr
+      - flameshot
     state: present
   become: yes
 
@@ -34,3 +35,15 @@
     src: templates/postswitch
     dest: "{{ autorandr_config_dir }}"
     mode: "0744"
+
+- name: Create flameshot config dir 
+  ansible.builtin.file:
+    path: "{{ flameshot_config_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Copy flameshot config
+  ansible.builtin.template:
+    src: templates/flameshot.ini
+    dest: "{{ flameshot_config_dir }}"
+    mode: "0644"

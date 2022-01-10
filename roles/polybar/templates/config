@@ -106,7 +106,7 @@ type = internal/xwindow
 
 [module/date]
 type = internal/date
-date = %b%e
+date = %b %e
 time = %H:%M:%S
 format = %{A3:gnome-calendar:}<label>%{A}
 label = %date% %time%
