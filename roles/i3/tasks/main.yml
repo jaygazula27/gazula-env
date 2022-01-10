@@ -18,6 +18,12 @@
     state: present
   become: yes
 
+- name: Install xss-lock
+  ansible.builtin.package:
+    name: xss-lock
+    state: present
+  become: yes
+
 - name: Create i3 config directory
   ansible.builtin.file:
     path: "{{ i3_config_dir }}"
@@ -27,5 +33,5 @@
 - name: Copy i3 config
   ansible.builtin.template:
     src: templates/config
-    dest: "{{ i3_config_dir }}/config"
+    dest: "{{ i3_config_dir }}"
     mode: "0755"

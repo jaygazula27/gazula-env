@@ -45,7 +45,7 @@
 - name: Copy Polybar config
   ansible.builtin.template:
     src: templates/config
-    dest: "{{ polybar_config_dir }}/config"
+    dest: "{{ polybar_config_dir }}"
     mode: "0755"
 
 - name: Copy launchpolybar script

@@ -1,0 +1,83 @@
+---
+- name: Remove i3lock (so that it doesn't conflict with i3lock-color)
+  ansible.builtin.package:
+    name: i3lock
+    state: absent
+  become: yes
+
+- name: Install i3lock-color dependencies
+  ansible.builtin.package:
+    name:
+      - autoconf
+      - gcc
+      - make
+      - pkg-config
+      - libpam0g-dev
+      - libcairo2-dev
+      - libfontconfig1-dev
+      - libxcb-composite0-dev
+      - libev-dev
+      - libx11-xcb-dev
+      - libxcb-xkb-dev
+      - libxcb-xinerama0-dev
+      - libxcb-randr0-dev
+      - libxcb-image0-dev
+      - libxcb-util0-dev
+      - libxcb-xrm-dev
+      - libxcb-xtest0-dev
+      - libxkbcommon-dev
+      - libxkbcommon-x11-dev
+      - libjpeg-dev
+    state: present
+  become: yes
+
+- name: Check if i3lock-color was installed via source
+  ansible.builtin.stat:
+    path: "{{ i3lock_src_dir }}"
+  register: i3lock_src_dir_stat
+
+- name: Print i3lock-color src dir details
+  ansible.builtin.debug:
+    msg: "{{ i3lock_src_dir_stat }}"
+
+- name: Install i3lock-color
+  block:
+    - name: Remove other i3lock-color versions
+      ansible.builtin.command:
+        cmd: rm -rf /i3lock-color-*
+        chdir: "{{ i3lock_src_dir_parent }}"
+      become: yes
+
+    - name: Download and extract i3lock-color source code
+      ansible.builtin.unarchive:
+        src: https://github.com/Raymo111/i3lock-color/archive/refs/tags/{{ i3lock_version }}.tar.gz
+        dest: "{{ i3lock_src_dir_parent }}"
+        remote_src: yes
+        mode: "0755"
+        owner: "root"
+        group: "root"
+      become: yes
+
+    - name: Run the i3lock-color install script
+      ansible.builtin.command:
+        chdir: "{{ i3lock_src_dir }}"
+        cmd: "./install-i3lock-color.sh"
+      become: yes
+  when: not i3lock_src_dir_stat.stat.exists
+
+- name: Copy lock screen wallpaper
+  ansible.builtin.copy:
+    src: files/tloulock.jpg
+    dest: "{{ lockscreen_path }}"
+
+- name: Create i3lock-color config directory
+  ansible.builtin.file:
+    path: "{{ i3lockcolor_config_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Copy i3lock-color script
+  ansible.builtin.template:
+    src: templates/lockscreen.sh
+    dest: "{{ i3lockcolor_config_dir }}"
+    mode: "0755"

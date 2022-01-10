@@ -1,0 +1,6 @@
+---
+i3lock_version: 2.13.c.4
+i3lock_src_dir: /usr/local/src/i3lock-color-{{ i3lock_version }}
+i3lock_src_dir_parent: /usr/local/src/
+lockscreen_path: ~/Pictures/wallpapers/tloulock.jpg
+i3lockcolor_config_dir: ~/.config/i3lockcolor/
