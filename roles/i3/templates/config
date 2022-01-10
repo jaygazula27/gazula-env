@@ -23,8 +23,8 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- $HOME/.config/i3lockcolor
 bindsym $mod+l exec "loginctl lock-session"
 
 # Use pactl to adjust volume in PulseAudio.
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10%
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
@@ -173,7 +173,7 @@ gaps bottom 10
 exec_always --no-startup-id $HOME/.config/polybar/launchpolybar.sh
 
 # Display resolution
-exec_always --no-startup-id autorandr --change
+exec_always --no-startup-id autorandr --change --force
 
 # Print screen
 bindsym --release Print exec flameshot gui

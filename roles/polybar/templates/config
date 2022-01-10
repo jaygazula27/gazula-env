@@ -22,6 +22,8 @@ black = #000
 bottom = false
 height = 50
 
+monitor = ${env:MONITOR:}
+
 ; Value used for drawing rounded corners
 ; Note: This shouldn't be used together with border-size because the border 
 ; doesn't get rounded. For this to work you may also need to enable 

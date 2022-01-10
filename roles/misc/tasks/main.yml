@@ -9,6 +9,7 @@
       - tree
       - feh
       - flameshot
+      - arandr
     state: present
   become: yes
 

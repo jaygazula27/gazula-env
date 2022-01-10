@@ -7,6 +7,8 @@ killall -q polybar
 while pgrep -x polybar >/dev/null; do sleep 1; done
 
 # Launch polybar
-echo "-------------" | tee -a /tmp/polybarbottom.log /tmp/polybartop.log
-polybar top 2>&1 | tee -a /tmp/polybartop.log & disown
-polybar bottom 2>&1 | tee -a /tmp/polybarbottom.log & disown
+for m in $(polybar --list-monitors | cut -d":" -f1); do
+    echo "-------------" | tee -a /tmp/polybartop$m.log /tmp/polybarbottom$m.log
+    MONITOR=$m polybar top 2>&1 | tee -a /tmp/polybartop$m.log & disown
+    MONITOR=$m polybar bottom 2>&1 | tee -a /tmp/polybarbottom$m.log & disown
+done
