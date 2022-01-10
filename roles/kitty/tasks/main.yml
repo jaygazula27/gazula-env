@@ -54,4 +54,4 @@
   ansible.builtin.template:
     src: templates/kitty.conf
     dest: "{{ kitty_config_dir }}"
-    mode: "0755"
+    mode: "0644"

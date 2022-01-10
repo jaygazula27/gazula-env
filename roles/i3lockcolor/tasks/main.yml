@@ -80,4 +80,4 @@
   ansible.builtin.template:
     src: templates/lockscreen.sh
     dest: "{{ i3lockcolor_config_dir }}"
-    mode: "0755"
+    mode: "0744"

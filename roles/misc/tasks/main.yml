@@ -8,6 +8,7 @@
       - curl
       - tree
       - feh
+      - autorandr
     state: present
   become: yes
 
@@ -21,3 +22,15 @@
   ansible.builtin.copy:
     src: files/mountains.png
     dest: "{{ wallpapers_dir }}"
+
+- name: Create autorandr config dir 
+  ansible.builtin.file:
+    path: "{{ autorandr_config_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Copy autorandr postswitch script
+  ansible.builtin.template:
+    src: templates/postswitch
+    dest: "{{ autorandr_config_dir }}"
+    mode: "0744"

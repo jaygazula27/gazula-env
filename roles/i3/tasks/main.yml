@@ -34,4 +34,4 @@
   ansible.builtin.template:
     src: templates/config
     dest: "{{ i3_config_dir }}"
-    mode: "0755"
+    mode: "0644"

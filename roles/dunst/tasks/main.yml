@@ -1,0 +1,18 @@
+---
+- name: Install dunst
+  ansible.builtin.package:
+    name: dunst
+    state: present
+  become: yes
+
+- name: Create dunst config directory
+  ansible.builtin.file:
+    path: "{{ dunst_config_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Copy dunst config
+  ansible.builtin.template:
+    src: templates/dunstrc
+    dest: "{{ dunst_config_dir }}"
+    mode: "0644"

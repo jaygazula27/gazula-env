@@ -15,16 +15,16 @@
   ansible.builtin.template:
     src: templates/launchrofi.sh
     dest: "{{ rofi_config_dir }}"
-    mode: "0755"
+    mode: "0744"
 
 - name: Copy rofi theme
   ansible.builtin.template:
     src: templates/theme.rasi
     dest: "{{ rofi_config_dir }}"
-    mode: "0755"
+    mode: "0644"
 
 - name: Copy rofi theme colors
   ansible.builtin.template:
     src: templates/colors.rasi
     dest: "{{ rofi_config_dir }}"
-    mode: "0755"
+    mode: "0644"
