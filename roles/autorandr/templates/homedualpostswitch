@@ -1,0 +1,5 @@
+#!/bin/sh
+
+DPI=192
+
+printf "%s\n" "Xft.dpi: $DPI" | xrdb -merge

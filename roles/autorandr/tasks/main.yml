@@ -1,0 +1,48 @@
+---
+- name: Install autorandr
+  ansible.builtin.package:
+    name: autorandr
+    state: present
+  become: yes
+
+- name: Create autorandr config dir 
+  ansible.builtin.file:
+    path: "{{ autorandr_config_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Create autorandr config postswitch.d dir 
+  ansible.builtin.file:
+    path: "{{ autorandr_config_dir }}/postswitch.d/"
+    state: directory
+    mode: "0755"
+
+- name: Copy autorandr postswitch script
+  ansible.builtin.template:
+    src: templates/setbackground
+    dest: "{{ autorandr_config_dir }}/postswitch.d/"
+    mode: "0744"
+
+- name: Create autorandr homedual profile dir
+  ansible.builtin.file:
+    path: "{{ autorandr_config_dir }}/homedual/"
+    state: directory
+    mode: "0755"
+
+- name: Copy autorandr homedual postswitch script
+  ansible.builtin.template:
+    src: templates/homedualpostswitch
+    dest: "{{ autorandr_config_dir }}/homedual/postswitch"
+    mode: "0744"
+
+- name: Create autorandr worklaptop profile dir
+  ansible.builtin.file:
+    path: "{{ autorandr_config_dir }}/worklaptop/"
+    state: directory
+    mode: "0755"
+
+- name: Copy autorandr worklaptop postswitch script
+  ansible.builtin.template:
+    src: templates/worklaptoppostswitch
+    dest: "{{ autorandr_config_dir }}/worklaptop/postswitch"
+    mode: "0744"
