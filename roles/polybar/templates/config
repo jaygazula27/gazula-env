@@ -100,6 +100,7 @@ modules-right = cpu memory temperature localip
 
 [module/title]
 type = internal/xwindow
+label-maxlen = 70
 
 
 ; ------------------------------------------------------
@@ -252,7 +253,6 @@ label-unfocused-padding = 1
 ; visible = Active workspace on unfocused monitor
 label-visible = %index%
 label-visible-foreground = ${self.label-focused-foreground}
-label-visible-background = ${self.label-focused-background}
 label-visible-underline = ${self.label-focused-underline}
 label-visible-padding = ${self.label-focused-padding}
 

@@ -163,11 +163,11 @@ popup_during_fullscreen leave_fullscreen
 client.focused $purple #285577 #ffffff $purple $purple
 
 # i3-gaps
-for_window [class=".*"] border pixel 0
 for_window [class="^.*"] border pixel 5
 gaps inner 30
-gaps outer 10
 gaps bottom 10
+smart_gaps on
+smart_borders on
 
 # Polybar
 exec_always --no-startup-id $HOME/.config/polybar/launchpolybar.sh

@@ -22,7 +22,7 @@
       - libxcb-xinerama0-dev
       - libxcb-randr0-dev
       - libxcb-image0-dev
-      - libxcb-util0-dev
+      - libxcb-util-dev
       - libxcb-xrm-dev
       - libxcb-xtest0-dev
       - libxkbcommon-dev
